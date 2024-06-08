@@ -8,11 +8,11 @@ namespace api.Controllers;
 [ApiController]
 public class PostsController : ControllerBase
 {
-    private readonly PostService _postsService;
+    private readonly PostsService _postsService;
 
     public PostsController()
     {
-        _postsService = new PostService();
+        _postsService = new PostsService();
     }
 
     [HttpGet]
