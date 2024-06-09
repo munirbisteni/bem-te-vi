@@ -65,7 +65,7 @@ public class AccountsController : ControllerBase
             return NotFound();
         }
 
-        await _accountsService.RemoveAccount(id);
+        await _accountsService.DeleteAccount(id);
 
         return NoContent();
     }

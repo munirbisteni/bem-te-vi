@@ -12,5 +12,5 @@ public interface IAccountsService
 
     Task UpdateAccount(string id, Account updatedAccount);
 
-    Task RemoveAccount(string id);
+    Task DeleteAccount(string id);
 }

@@ -1,12 +1,13 @@
-﻿namespace api.Models;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+
+namespace api.Models;
 
 public class BemteviDatabaseSettings
 {
-    public string ConnectionString { get; set; } = "mongodb://localhost:27017";
+    public string ConnectionString { get; set; } = null!;
 
-    public string DatabaseName { get; set; } = "bemtevi";
+    public string DatabaseName { get; set; } = null!;
+    public string AccountsCollectionName { get; set; } = null!;
 
-    public string AccountsCollectionName { get; set; } = "Accounts";
-
-    public string PostsCollectionName { get; set; } = "Posts";
+    public string PostsCollectionName { get; set; } = null!;
 }

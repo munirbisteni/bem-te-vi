@@ -33,6 +33,6 @@ public class AccountsService : IAccountsService
     public async Task UpdateAccount(string id, Account updatedAccount) =>
         await _accountsCollection.ReplaceOneAsync(x => x.Id == id, updatedAccount);
 
-    public async Task RemoveAccount(string id) =>
+    public async Task DeleteAccount(string id) =>
         await _accountsCollection.DeleteOneAsync(x => x.Id == id);
 }

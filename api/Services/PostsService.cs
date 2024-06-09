@@ -1,48 +1,38 @@
 ﻿using api.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace api.Services;
  
 public class PostsService : IPostsService
 {
-    private static readonly List<Post> AllPosts = new();
-    public Task CreatePost(Post item)
+    private readonly IMongoCollection<Post> _postsCollection;
+
+    public PostsService(
+        IOptions<BemteviDatabaseSettings> bemteviDatabaseSettings)
     {
-        AllPosts.Add(item);
-        return Task.CompletedTask;
+        var mongoClient = new MongoClient(
+            bemteviDatabaseSettings.Value.ConnectionString);
+
+        var mongoDatabase = mongoClient.GetDatabase(
+            bemteviDatabaseSettings.Value.DatabaseName);
+
+        _postsCollection = mongoDatabase.GetCollection<Post>(
+            bemteviDatabaseSettings.Value.PostsCollectionName);
     }
 
-    public Task<Post?> UpdatePost(int id, Post item)
-    {
-        var post = AllPosts.FirstOrDefault(x => x.Id == id);
-        if (post != null)
-        {
-            post.Title = item.Title;
-            post.Body = item.Body;
-            post.UserId = item.UserId;
-        }
+    public async Task<List<Post>> GetPosts() =>
+        await _postsCollection.Find(_ => true).ToListAsync();
 
-        return Task.FromResult(post);
-    }
+    public async Task<Post?> GetPost(string id) =>
+        await _postsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-    public Task<Post?> GetPost(int id)
-    {
-        return Task.FromResult(AllPosts.FirstOrDefault(x => x.Id == id));
-    }
+    public async Task CreatePost(Post newPost) =>
+        await _postsCollection.InsertOneAsync(newPost);
 
-    public Task<List<Post>> GetAllPosts()
-    {
-        return Task.FromResult(AllPosts);
-    }
+    public async Task UpdatePost(string id, Post updatedPost) =>
+        await _postsCollection.ReplaceOneAsync(x => x.Id == id, updatedPost);
 
-    public Task DeletePost(int id)
-    {
-        var post = AllPosts.FirstOrDefault(x => x.Id == id);
-        if (post != null)
-        {
-            AllPosts.Remove(post);
-        }
-
-        return Task.CompletedTask;
-    }
-
+    public async Task DeletePost(string id) =>
+        await _postsCollection.DeleteOneAsync(x => x.Id == id);
 }

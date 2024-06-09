@@ -4,74 +4,69 @@ using api.Services;
 
 namespace api.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class PostsController : ControllerBase
 {
     private readonly PostsService _postsService;
 
-    public PostsController()
-    {
-        _postsService = new PostsService();
-    }
+    public PostsController(PostsService postsService) =>
+        _postsService = postsService;
 
     [HttpGet]
-    public ActionResult<List<Post>> GetPosts()
-    {
-        return new List<Post>
-        {
-            new() { Id = 1, UserId = 1, Title = "Post1", Body = "Thefirst post." },
-            new() { Id = 2, UserId = 1, Title = "Post2", Body = "The second post." },
-            new() { Id = 3, UserId = 1, Title = "Post3", Body = "The third post." }
-        };
-    }
+    public async Task<List<Post>> Get() =>
+        await _postsService.GetPosts();
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Post>> GetPost(int id)
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<Post>> Get(string id)
     {
         var post = await _postsService.GetPost(id);
-        if (post == null)
+
+        if (post is null)
         {
             return NotFound();
         }
-        return Ok(post);
+
+        return post;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Post>> CreatePost(Post post)
+    public async Task<IActionResult> Post(Post newPost)
     {
-        await _postsService.CreatePost(post);
+        await _postsService.CreatePost(newPost);
 
-        return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
+        return CreatedAtAction(nameof(Get), new { id = newPost.Id }, newPost);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdatePost(int id, Post post)
+    [HttpPut("{id:length(24)}")]
+    public async Task<IActionResult> Update(string id, Post updatedPost)
     {
-        if (id != post.Id)
-        {
-            return BadRequest();
-        }
+        var post = await _postsService.GetPost(id);
 
-        var updatedPost = await _postsService.UpdatePost(id, post);
-        if (updatedPost == null)
+        if (post is null)
         {
             return NotFound();
         }
 
-        return Ok(post);
+        updatedPost.Id = post.Id;
+
+        await _postsService.UpdatePost(id, updatedPost);
+
+        return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<Post>> DeletePost(int id)
+    [HttpDelete("{id:length(24)}")]
+    public async Task<IActionResult> Delete(string id)
     {
-        var post = _postsService.GetPost(id);
-        if (post == null)
+        var post = await _postsService.GetPost(id);
+
+        if (post is null)
         {
             return NotFound();
         }
 
         await _postsService.DeletePost(id);
+
         return NoContent();
     }
 }
