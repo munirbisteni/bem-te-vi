@@ -7,22 +7,11 @@ using MongoDB.Driver;
 
 namespace api.Services;
 
-public class AccountsService
+public class AccountsService(
+    IOptions<DatabaseSettings> databaseSettings,
+    IMongoDatabase database)
 {
-    private readonly IMongoCollection<Account> _accountsCollection;
-
-    public AccountsService(
-        IOptions<DatabaseSettings> DatabaseSettings)
-    {
-        var mongoClient = new MongoClient(
-            DatabaseSettings.Value.ConnectionString);
-
-        var mongoDatabase = mongoClient.GetDatabase(
-            DatabaseSettings.Value.DatabaseName);
-
-        _accountsCollection = mongoDatabase.GetCollection<Account>(
-            DatabaseSettings.Value.AccountsCollectionName);
-    }
+    private readonly IMongoCollection<Account> _accountsCollection = database.GetCollection<Account>(databaseSettings.Value.AccountsCollectionName);
 
     public async Task<List<Account>> GetAccounts() =>
         await _accountsCollection.Find(_ => true).ToListAsync();

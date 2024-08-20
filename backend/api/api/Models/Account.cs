@@ -1,8 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace api.Models;
 
+[Table("Account")]
 public class Account
 {
     [BsonId]
