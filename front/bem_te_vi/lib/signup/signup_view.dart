@@ -74,7 +74,6 @@ class SignupViewState extends State<SignupView> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Navigate to login view
                         Navigator.push(
                           context,
                           MaterialPageRoute(

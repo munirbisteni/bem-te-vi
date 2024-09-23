@@ -64,7 +64,7 @@ class LoginViewState extends State<LoginView> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // TODO: Handle login logic here
+                            // TODO: Implementar lógica de login
                             print('Login button pressed');
                           }
                         },
@@ -75,7 +75,7 @@ class LoginViewState extends State<LoginView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignupView()),
+                              builder: (context) => const SignupView()),
                           );
                         },
                         child: const Text('Signup'),

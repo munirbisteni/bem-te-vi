@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bem_te_vi/login/login_view.dart';
+
+import 'package:bem_te_vi/home/home_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const LoginView(),
+      home: const HomeView(),
     );
   }
 }
