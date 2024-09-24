@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bem_te_vi/signup/signup_view.dart';
+import 'package:bem_te_vi/home/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -12,6 +13,12 @@ class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void _login() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeView()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +71,7 @@ class LoginViewState extends State<LoginView> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // TODO: Implementar lógica de login
-                            print('Login button pressed');
+                            _login();
                           }
                         },
                         child: const Text('Login'),

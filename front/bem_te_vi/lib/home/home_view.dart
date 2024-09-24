@@ -12,10 +12,6 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
 
-  final List<Widget> _children = [
-    ProfileView(),
-  ];
-
   final List<Widget> _posts = [
     PostCard(
       username: 'Username',
@@ -95,8 +91,14 @@ class HomeViewState extends State<HomeView> {
           setState(() {
             _currentIndex = index;
           });
+
+          if (index == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileView()),
+          );
+    }
         },
-        currentIndex: _currentIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
