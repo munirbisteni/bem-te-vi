@@ -9,7 +9,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Username')
+        title: const Text('Usuário')
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -19,7 +19,7 @@ class ProfileView extends StatelessWidget {
               radius: 60,
             ),
             const SizedBox(height: 10),
-            const Text('Username', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('Usuário', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             TextField(
               controller: bioController,

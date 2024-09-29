@@ -1,94 +1,139 @@
-import 'package:bem_te_vi/login/login_view.dart';
 import 'package:flutter/material.dart';
+import 'signup_controller.dart';
 
 class SignupView extends StatefulWidget {
-  const SignupView({super.key});
-
   @override
   SignupViewState createState() => SignupViewState();
 }
 
 class SignupViewState extends State<SignupView> {
+  final _controller = SignupController();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _isLoading = false;
+  String? _errorMessage, _message;
+
+  void _signup() async {
+    if (!_formKey.currentState!.validate()) {
+      return; // Stop if validation fails
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _message = null;
+    });
+
+    final username = _usernameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    try {
+      final accessToken = await _controller.signup(email, username, password);
+
+      setState(() {
+        _isLoading = false;
+        if (accessToken != null) {
+          _message = "Cadastro realizado com sucesso!";
+          Navigator.pushReplacementNamed(context, '/');
+        }
+      });
+    } on Exception catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Signup')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400 * 0.9),
+      appBar: AppBar(title: Text('Cadastro')),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
+                  _buildTextField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      border: OutlineInputBorder(),
-                    ),
+                    label: 'Nome de usuário',
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a username';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu nome de usuário';
                       }
                       return null;
-                    },
+                    }
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
+                  SizedBox(height: 16),
+                  _buildTextField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
+                    label: 'Email',
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter an email';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu email';
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
+                  SizedBox(height: 16),
+                  _buildTextField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
+                    label: 'Senha',
                     obscureText: true,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a password';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira sua senha';
+                      } else if (value.length < 6) {
+                        return 'Sua senha deve ter pelo menos 6 caracteres';
                       }
                       return null;
-                    },
+                    }
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
+                  if (_isLoading) CircularProgressIndicator(),
+                  if (_errorMessage != null)
+                    Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                  if (_message != null)
+                    Text(_message!, style: const TextStyle(color: Colors.green)),
+                  SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginView()),
-                        );
-                      }
-                    },
-                    child: const Text('Signup'),
-                  )
+                    onPressed: _isLoading ? null : _signup,
+                    child: Text("Cadastrar-se")
+                  ),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    bool obscureText = false,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(), // Add a border to the text field
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+        ),
+      ),
+      obscureText: obscureText,
+      validator: validator,
     );
   }
 }
