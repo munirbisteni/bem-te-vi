@@ -1,5 +1,4 @@
-import 'package:bem_te_vi/post/post_view.dart';
-import 'package:bem_te_vi/profile/profile_view.dart';
+import 'package:bem_te_vi/post/posts_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -12,96 +11,34 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
 
-  final List<Widget> _posts = [
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-    PostCard(
-      username: 'Username',
-      image: Image.asset('assets/post-placeholder.jpg'),
-      caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likes: 100,
-      comments: 50,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BemTeVi'),
       ),
-      body: Scrollbar(
-        child: ListView(
-          children: [
-            Column(
-              children: _posts,
-            )
-          ],
-        ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          PostsView(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
-
-          if (index == 1) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileView()),
-          );
-    }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Tela inicial'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile'
+          ),
         ],
       ),
     );

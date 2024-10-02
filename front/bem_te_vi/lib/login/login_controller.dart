@@ -8,9 +8,11 @@ class LoginController {
     try {
       final data = await _loginService.login(username, password);
       final accessToken = data['accessToken'];
+      final userId = data['userId'];
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessToken', accessToken);
+      await prefs.setString('userId', userId);
 
       return accessToken;
     } on Exception {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'signup_controller.dart';
 
 class SignupView extends StatefulWidget {
+  const SignupView({super.key});
+
   @override
   SignupViewState createState() => SignupViewState();
 }
@@ -52,7 +54,7 @@ class SignupViewState extends State<SignupView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cadastro')),
+      appBar: AppBar(title: const Text('Cadastro')),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -72,7 +74,7 @@ class SignupViewState extends State<SignupView> {
                       return null;
                     }
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildTextField(
                     controller: _emailController,
                     label: 'Email',
@@ -83,7 +85,7 @@ class SignupViewState extends State<SignupView> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildTextField(
                     controller: _passwordController,
                     label: 'Senha',
@@ -97,16 +99,16 @@ class SignupViewState extends State<SignupView> {
                       return null;
                     }
                   ),
-                  SizedBox(height: 20),
-                  if (_isLoading) CircularProgressIndicator(),
+                  const SizedBox(height: 20),
+                  if (_isLoading) const CircularProgressIndicator(),
                   if (_errorMessage != null)
                     Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
                   if (_message != null)
                     Text(_message!, style: const TextStyle(color: Colors.green)),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _signup,
-                    child: Text("Cadastrar-se")
+                    child: const Text("Cadastrar-se")
                   ),
                 ],
               ),
@@ -127,7 +129,7 @@ class SignupViewState extends State<SignupView> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(), // Add a border to the text field
+        border: const OutlineInputBorder(), // Add a border to the text field
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         ),

@@ -9,7 +9,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Usuário')
+        title: const Text('Perfil')
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

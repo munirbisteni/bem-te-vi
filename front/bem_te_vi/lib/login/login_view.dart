@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'login_controller.dart';
 
 class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
   @override
   LoginViewState createState() => LoginViewState();
 }
 
 class LoginViewState extends State<LoginView> {
   final _controller = LoginController();
-  final _formKey = GlobalKey<FormState>(); // Form key for validation
+  final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -17,7 +19,7 @@ class LoginViewState extends State<LoginView> {
 
   void _login() async {
     if (!_formKey.currentState!.validate()) {
-      return; // Stop if validation fails
+      return;
     }
 
     setState(() {
@@ -50,15 +52,15 @@ class LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Center( // Center the form
+      appBar: AppBar(title: const Text('Login')),
+      body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Minimize the column height
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildTextField(
                     controller: _usernameController,
@@ -70,7 +72,7 @@ class LoginViewState extends State<LoginView> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildTextField(
                     controller: _passwordController,
                     label: 'Senha',
@@ -84,20 +86,20 @@ class LoginViewState extends State<LoginView> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
-                  if (_isLoading) CircularProgressIndicator(),
+                  const SizedBox(height: 20),
+                  if (_isLoading) const CircularProgressIndicator(),
                   if (_errorMessage != null)
-                    Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-                  SizedBox(height: 20),
+                    Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _login,
-                    child: Text('Entrar'),
+                    child: const Text('Entrar'),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup'); // Navigate to signup page
+                      Navigator.pushNamed(context, '/signup');
                     },
-                    child: Text('Não tem uma conta? Cadastre-se'),
+                    child: const Text('Não tem uma conta? Cadastre-se'),
                   ),
                 ],
               ),
@@ -118,7 +120,7 @@ class LoginViewState extends State<LoginView> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(), // Add a border to the text field
+        border: const OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         ),
