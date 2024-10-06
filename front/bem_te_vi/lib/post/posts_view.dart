@@ -4,11 +4,13 @@ import 'post_card.dart';
 import 'package:bem_te_vi/models/post.dart';
 
 class PostsView extends StatefulWidget {
+  const PostsView({super.key});
+
   @override
-  _PostsViewState createState() => _PostsViewState();
+  PostsViewState createState() => PostsViewState();
 }
 
-class _PostsViewState extends State<PostsView> {
+class PostsViewState extends State<PostsView> {
   final _controller = PostController();
   List<Post> _posts = [];
   bool _isLoading = true;
@@ -22,7 +24,7 @@ class _PostsViewState extends State<PostsView> {
 
   Future<void> _fetchPosts() async {
     try {
-      final postsData = await _controller.getPostsByUser();
+      final postsData = await _controller.getPostsByFollowing();
       setState(() {
         _posts = postsData.map<Post>((json) => Post.fromJson(json)).toList();
         _isLoading = false;
@@ -38,7 +40,7 @@ class _PostsViewState extends State<PostsView> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_errorMessage != null) {

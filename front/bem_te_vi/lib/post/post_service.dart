@@ -14,4 +14,16 @@ class PostService {
       throw Exception('Failed to load posts');
     }
   }
+
+  Future<List<dynamic>> getPostsByFollowing() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    
+    final response = await apiClient.get('posts/user/$userId/following');
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load posts');
+    }
+  }
 }

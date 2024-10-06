@@ -10,4 +10,12 @@ class PostController {
       rethrow;
     }
   }
+
+  Future<List<dynamic>> getPostsByFollowing() async {
+    try {
+      return await _postService.getPostsByFollowing();
+    } on Exception {
+      rethrow;
+    }
+  }
 }

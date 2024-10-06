@@ -19,7 +19,7 @@ class HomeViewState extends State<HomeView> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: [
+        children: const [
           PostsView(),
         ],
       ),
