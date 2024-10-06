@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -21,14 +22,19 @@ public class User implements UserDetails {
 
     @Id
     private String id;
+
     @NonNull
     private String username;
+
     @Indexed(unique = true)
     @NonNull
     private String mail;
+
     @JsonIgnore
     @NonNull
     private String password;
+
+    private List<String> following;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -44,6 +50,8 @@ public class User implements UserDetails {
     public @NonNull String getUsername() {
         return username;
     }
+
+    public List<String> getFollowing() { return following; }
 
     @Override
     public boolean isAccountNonExpired() {
