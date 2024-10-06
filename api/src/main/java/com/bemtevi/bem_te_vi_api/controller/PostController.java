@@ -16,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
     private final PostService postService;
+    private final UserService userService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, UserService userService) {
         this.postService = postService;
+        this.userService = userService;
     }
 
     @PostMapping("/create")
@@ -38,11 +40,11 @@ public class PostController {
 
     @GetMapping("/user/{userId}/following")
     public ResponseEntity<List<PostDTO>> getPostsByFollowing(@PathVariable String userId) {
-        // Pega a lista de usuários que o usuário atual segue
+        // Fetches current user following list
+        List<String> following = userService.getFollowingByUserId(userId);
+        // Fetches following list posts
+        List<PostDTO> posts = postService.getPostsByUserIds(following);
 
-        // Pega os posts de quem o usuário atual segue
-
-        // Retorna a lista de posts com status code 200
-        return null;
+        return ResponseEntity.ok(posts);
     }
 }

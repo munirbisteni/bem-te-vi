@@ -9,6 +9,7 @@ import com.bemtevi.bem_te_vi_api.utils.PostMapper;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +63,13 @@ public class PostService{
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         List<Post> posts = postRepository.findByAuthor(user);
+        return posts.stream()
+                .map(PostMapper::toPostDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostDTO> getPostsByUserIds(List<String> userIds) {
+        List<Post> posts = postRepository.findByAuthorIn(userIds);
         return posts.stream()
                 .map(PostMapper::toPostDTO)
                 .collect(Collectors.toList());
