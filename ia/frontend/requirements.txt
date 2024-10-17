@@ -1,0 +1,8 @@
+streamlit
+transformers
+torch
+altair
+extcolors
+opencv-python-headless
+colour-science
+requests
