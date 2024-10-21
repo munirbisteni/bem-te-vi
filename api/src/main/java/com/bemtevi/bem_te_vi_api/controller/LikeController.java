@@ -14,23 +14,6 @@ public class LikeController {
     @Autowired
     private PostRepository postRepository;
 
-    @PostMapping("/{postId}/like")
-    public ResponseEntity<String> likePost(@PathVariable String postId, @RequestBody String userId) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if (post.getLikes().contains(userId)) {
-            return ResponseEntity.badRequest().body("Post already liked");
-        }
-
-        post.getLikes().add(userId);
-        postRepository.save(post);
-
-        return ResponseEntity.ok("Post liked successfully. Total likes: " + post.getLikeCounter());
-    }
-
     @DeleteMapping("/{postId}/like")
     public ResponseEntity<String> unlikePost(@PathVariable String postId, @RequestBody String userId) {
         Post post = postRepository.findById(postId).orElse(null);

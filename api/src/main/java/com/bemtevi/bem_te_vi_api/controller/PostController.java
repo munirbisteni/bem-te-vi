@@ -28,9 +28,14 @@ public class PostController {
         return postService.createPost(createPostDTO.userId(), createPostDTO.description(), createPostDTO.imageUrl());
     }
 
-    @PostMapping("/{postId}/like")
-    public void likePost(@PathVariable String postId, @RequestParam String userId) {
+    @PostMapping("/{postId}/like/{userId}")
+    public void likePost(@PathVariable String postId, @PathVariable String userId) {
         postService.likePost(postId, userId);
+    }
+
+    @PostMapping("/{postId}/unlike/{userId}")
+    public void unlikePost(@PathVariable String postId, @PathVariable String userId) {
+        postService.unlikePost(postId, userId);
     }
 
     @GetMapping("/user/{userId}")

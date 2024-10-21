@@ -24,12 +24,12 @@ class ApiClient {
     return response;
   }
 
-  Future<http.Response> post(String endpoint, Map<String, dynamic> data) async {
+  Future<http.Response> post(String endpoint, [Map<String, dynamic>? data]) async {
     final headers = await _getHeaders();
     final response = await http.post(
       Uri.parse('$baseUrl/$endpoint'),
       headers: headers,
-      body: jsonEncode(data),
+      body: data != null ? jsonEncode(data) : '',
     );
     return response;
   }

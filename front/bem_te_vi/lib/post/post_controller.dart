@@ -18,4 +18,20 @@ class PostController {
       rethrow;
     }
   }
+
+  Future<void> likePost(String postId) async {
+    try {
+      return await _postService.likePost(postId);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  Future<void> unlikePost(String postId) async {
+    try {
+      return await _postService.unlikePost(postId);
+    } on Exception {
+      rethrow;
+    }
+  }
 }
