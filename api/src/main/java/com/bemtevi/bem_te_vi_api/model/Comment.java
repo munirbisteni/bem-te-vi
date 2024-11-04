@@ -17,6 +17,9 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @DBRef
+    private Post post;
+
+    @DBRef
     private User author;
 
     @DBRef

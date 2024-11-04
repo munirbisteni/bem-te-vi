@@ -9,6 +9,7 @@ import com.bemtevi.bem_te_vi_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.util.UUID.randomUUID;
 
@@ -25,6 +26,10 @@ public class CommentService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+    }
+
+    public List<Comment> getCommentsByPostId(String postId) {
+        return commentRepository.findAllByPost(postId);
     }
 
     public void addCommentToPost(String postId, String userId, String content) {
