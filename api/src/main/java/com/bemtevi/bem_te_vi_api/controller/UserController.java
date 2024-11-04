@@ -1,6 +1,9 @@
 package com.bemtevi.bem_te_vi_api.controller;
 
+import com.bemtevi.bem_te_vi_api.dto.UserDTO;
+import com.bemtevi.bem_te_vi_api.model.User;
 import com.bemtevi.bem_te_vi_api.service.UserService;
+import com.bemtevi.bem_te_vi_api.utils.UserMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,15 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
+        User user = userService.findById(userId);
+
+        return user == null
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(UserMapper.toUserDTO(user));
     }
 
     @GetMapping("/{userId}/following")

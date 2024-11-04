@@ -26,6 +26,11 @@ public class User implements UserDetails {
     @NonNull
     private String username;
 
+    @NonNull
+    private String displayName;
+
+    private String about;
+
     @Indexed(unique = true)
     @NonNull
     private String mail;
