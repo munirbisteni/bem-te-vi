@@ -4,11 +4,9 @@ import com.bemtevi.bem_te_vi_api.dto.UserDTO;
 import com.bemtevi.bem_te_vi_api.model.User;
 import com.bemtevi.bem_te_vi_api.service.UserService;
 import com.bemtevi.bem_te_vi_api.utils.UserMapper;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +26,11 @@ public class UserController {
         return user == null
                 ? ResponseEntity.notFound().build()
                 : ResponseEntity.ok(UserMapper.toUserDTO(user));
+    }
+
+    @PutMapping("/{userId}/about")
+    public void updateUserAbout(@PathVariable String userId, @RequestBody String about) {
+        userService.updateUserAbout(userId, about);
     }
 
     @GetMapping("/{userId}/following")

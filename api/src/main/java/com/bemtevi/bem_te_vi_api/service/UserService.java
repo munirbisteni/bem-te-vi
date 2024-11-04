@@ -15,6 +15,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    public void updateUserAbout(String userId, String about) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("user id not found"));
+        user.setAbout(about);
+        userRepository.save(user);
+    }
+
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
