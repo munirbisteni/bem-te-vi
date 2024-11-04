@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @Document(collection = "posts")
 public class Post {
-
     @Id
     private String id;
     private String description;
@@ -27,5 +26,9 @@ public class Post {
 
     public int getLikeCounter() {
         return likes.size();
+    }
+
+    public int getCommentsCounter() {
+        return comments.size();
     }
 }

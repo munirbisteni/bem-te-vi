@@ -27,7 +27,9 @@ public class PostMapper {
                 post.getCreatedAt(),
                 post.getAuthor().getId(),
                 post.getLikes(),
-                comments
+                comments,
+                post.getLikeCounter(),
+                post.getCommentsCounter()
         );
     }
 }

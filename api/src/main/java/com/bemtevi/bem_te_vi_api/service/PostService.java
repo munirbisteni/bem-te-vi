@@ -42,8 +42,12 @@ public class PostService{
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        post.getLikes().add(userId);
+        if (post.getLikes().contains(userId)) {
+            unlikePost(postId, userId);
+            return;
+        }
 
+        post.getLikes().add(userId);
         postRepository.save(post);
     }
 
