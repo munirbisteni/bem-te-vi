@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,6 +20,13 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("user id not found"));
         user.setAbout(about);
+        userRepository.save(user);
+    }
+
+    public void uploadProfileImage(String userId, byte[] imageBytes) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("user id not found"));
+        user.setProfileImage(imageBytes);
         userRepository.save(user);
     }
 
