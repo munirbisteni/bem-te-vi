@@ -6,7 +6,7 @@ import { Image, type ImageSource } from 'expo-image';
 interface PostCardViewProps {
   profileImage: ImageSource | null; // URL or local path to the user's profile image
   author: string;
-  imageUrl: ImageSource | null; // URL or local path to the post image
+  image: ImageSource | null; // URL or local path to the post image
   description: string;
   likesCount: number;
   commentsCount: number;
@@ -24,7 +24,7 @@ export default function PostCardView(props: PostCardViewProps) {
       </View>
 
       {/* Post Image Section */}
-      <Image source={props.imageUrl} style={styles.imageUrl} />
+      <Image source={props.image} style={styles.imageUrl} />
 
       {/* Description and Actions Section */}
       <View style={styles.actions}>

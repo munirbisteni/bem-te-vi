@@ -41,18 +41,25 @@ export default function HomeScreen() {
         data.map(async (item: any) => {
           const profileImageResponse = await fetch(`http://10.0.2.2:8081/api/users/${item.author}/profile-image`, {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           });
-
           const imageData = await profileImageResponse.json();
           const profileImage = `data:profileImage/jpeg;base64,${imageData.profileImage}`
+
+          const postImageResponse = await fetch(`http://10.0.2.2:8081/api/posts/${item.id}/image`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const postImageData = await postImageResponse.json();
+          const postImage = `data:image/jpeg;base64,${postImageData.image}`;
 
           return {
             profileImage: profileImage || null,
             id: item.id,
             author: item.author,
-            imageUrl: item.imageUrl || null,
+            image: postImage || null,
             description: item.description,
             likesCount: item.likeCount,
             commentsCount: item.commentsCount,

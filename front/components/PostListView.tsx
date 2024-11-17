@@ -14,7 +14,7 @@ export default function PostListView({ posts, onLike, onComment }: PostListViewP
     <PostCardView
       profileImage={item.profileImage}
       author={item.author}
-      imageUrl={item.imageUrl}
+      image={item.image}
       description={item.description}
       likesCount={item.likesCount}
       commentsCount={item.commentsCount}
