@@ -12,7 +12,7 @@ interface PostListViewProps {
 export default function PostListView({ posts, onLike, onComment }: PostListViewProps) {
   const renderItem = ({ item }: { item: Post }) => (
     <PostCardView
-      // userProfileImage={item.userProfileImage}
+      profileImage={item.profileImage}
       author={item.author}
       imageUrl={item.imageUrl}
       description={item.description}

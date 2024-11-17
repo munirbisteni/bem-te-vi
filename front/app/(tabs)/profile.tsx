@@ -20,7 +20,7 @@ export default function ProfileScreen() {
         const userId = await AsyncStorage.getItem("userId");
         const token = await AsyncStorage.getItem("accessToken");
 
-        const response = await fetch(`http://10.0.2.2:8080/api/users/${userId}`, {
+        const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +44,7 @@ export default function ProfileScreen() {
       try {
         const userId = await AsyncStorage.getItem('userId');
         const token = await AsyncStorage.getItem('accessToken');
-        const response = await fetch(`http://10.0.2.2:8080/api/users/${userId}/profile-image`, {
+        const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}/profile-image`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,7 +74,7 @@ export default function ProfileScreen() {
     try {
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('accessToken');
-      const response = await fetch(`http://10.0.2.2:8080/api/users/${userId}/profile-image`, {
+      const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}/profile-image`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
       const userId = await AsyncStorage.getItem("userId");
       const token = await AsyncStorage.getItem("accessToken");
 
-      const response = await fetch(`http://10.0.2.2:8080/api/users/${userId}/about`, {
+      const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}/about`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

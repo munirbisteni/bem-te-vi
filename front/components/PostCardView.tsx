@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image, type ImageSource } from 'expo-image';
 
 interface PostCardViewProps {
-  // userProfileImage: ImageSource; // URL or local path to the user's profile image
+  profileImage: ImageSource | null; // URL or local path to the user's profile image
   author: string;
   imageUrl: ImageSource | null; // URL or local path to the post image
   description: string;
@@ -19,7 +19,7 @@ export default function PostCardView(props: PostCardViewProps) {
     <View style={styles.card}>
       {/* User Profile Section */}
       <View style={styles.userInfo}>
-        {/* <Image source={userProfileImage} style={styles.profileImage} /> */}
+        <Image source={props.profileImage} style={styles.profileImage} />
         <Text style={styles.author}>{props.author}</Text>
       </View>
 

@@ -23,7 +23,7 @@ export default function HomeScreen() {
       }
 
       // Make the API request to fetch posts
-      const response = await fetch(`http://10.0.2.2:8080/api/posts/user/${userId}/following`, {
+      const response = await fetch(`http://10.0.2.2:8081/api/posts/user/${userId}/following`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -37,14 +37,27 @@ export default function HomeScreen() {
 
       // Process the JSON response and map to Post interface
       const data = await response.json();
-      const mappedPosts: Post[] = data.map((item: any) => ({
-        id: item.id,
-        author: item.author,
-        imageUrl: item.imageUrl || null,
-        description: item.description,
-        likesCount: item.likeCount,
-        commentsCount: item.commentsCount,
-      }));
+      const mappedPosts: Post[] = await Promise.all(
+        data.map(async (item: any) => {
+          const profileImageResponse = await fetch(`http://10.0.2.2:8081/api/users/${item.author}/profile-image`, {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+          });
+
+          const imageData = await profileImageResponse.json();
+          const profileImage = `data:profileImage/jpeg;base64,${imageData.profileImage}`
+
+          return {
+            profileImage: profileImage || null,
+            id: item.id,
+            author: item.author,
+            imageUrl: item.imageUrl || null,
+            description: item.description,
+            likesCount: item.likeCount,
+            commentsCount: item.commentsCount,
+          }
+        }));
 
       setPosts(mappedPosts);
     } catch (error) {
@@ -72,7 +85,7 @@ export default function HomeScreen() {
       }
 
       // Call the like endpoint
-      const likeResponse = await fetch(`http://10.0.2.2:8080/api/posts/${postId}/like/${userId}`, {
+      const likeResponse = await fetch(`http://10.0.2.2:8081/api/posts/${postId}/like/${userId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -85,7 +98,7 @@ export default function HomeScreen() {
       }
 
       // Call the likes count endpoint to get the updated like count
-      const likesResponse = await fetch(`http://10.0.2.2:8080/api/posts/${postId}/likes`, {
+      const likesResponse = await fetch(`http://10.0.2.2:8081/api/posts/${postId}/likes`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,

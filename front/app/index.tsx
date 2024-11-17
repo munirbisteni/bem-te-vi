@@ -21,7 +21,7 @@ export default function SignInScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://10.0.2.2:8080/api/auth/login', {
+      const response = await fetch('http://10.0.2.2:8081/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
