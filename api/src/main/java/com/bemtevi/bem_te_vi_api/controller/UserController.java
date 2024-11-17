@@ -61,7 +61,7 @@ public class UserController {
         }
 
         String base64Image = Base64.getEncoder().encodeToString(user.getProfileImage());
-        return ResponseEntity.ok().body(Collections.singletonMap("image", base64Image));
+        return ResponseEntity.ok().body(Collections.singletonMap("profileImage", base64Image));
     }
 
     @GetMapping("/{userId}/following")
