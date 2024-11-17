@@ -6,6 +6,7 @@ import com.bemtevi.bem_te_vi_api.model.User;
 import com.bemtevi.bem_te_vi_api.repository.PostRepository;
 import com.bemtevi.bem_te_vi_api.repository.UserRepository;
 import com.bemtevi.bem_te_vi_api.utils.PostMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,13 +24,13 @@ public class PostService{
         this.userRepository = userRepository;
     }
 
-    public Post createPost(String userId, String description, String imageUrl) {
+    public Post createPost(String userId, String description, byte[] image) {
         User author = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Post post = new Post();
         post.setDescription(description);
-        post.setImageUrl(imageUrl);
+        post.setImage(image);
         post.setCreatedAt(LocalDateTime.now());
         post.setAuthor(author);
 
@@ -77,5 +78,17 @@ public class PostService{
         return posts.stream()
                 .map(PostMapper::toPostDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Post findById(String postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new UsernameNotFoundException("post id not found"));
+    }
+
+    public void uploadPostImage(String postId, byte[] imageBytes) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new UsernameNotFoundException("post id not found"));
+        post.setImage(imageBytes);
+        postRepository.save(post);
     }
 }

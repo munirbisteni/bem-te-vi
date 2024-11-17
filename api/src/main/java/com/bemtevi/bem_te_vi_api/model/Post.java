@@ -2,6 +2,7 @@ package com.bemtevi.bem_te_vi_api.model;
 
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,7 +14,8 @@ public class Post {
     @Id
     private String id;
     private String description;
-    private String imageUrl;
+    @Getter
+    private byte[] image;
     private LocalDateTime createdAt;
 
     @DBRef

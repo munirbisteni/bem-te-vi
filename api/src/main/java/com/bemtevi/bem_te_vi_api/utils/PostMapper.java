@@ -23,7 +23,7 @@ public class PostMapper {
         return new PostDTO(
                 post.getId(),
                 post.getDescription(),
-                post.getImageUrl(),
+                post.getImage(),
                 post.getCreatedAt(),
                 post.getAuthor().getId(),
                 post.getLikes(),
