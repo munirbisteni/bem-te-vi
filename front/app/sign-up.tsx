@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,7 +15,7 @@ export default function SignUpScreen() {
 
   const handleSignUp = async () => {
     // Basic validation
-    if (!email || !username || !password || !confirmPassword) {
+    if (!email || !displayName || !username || !password || !confirmPassword) {
       setAlertMessage('All fields are required');
       setAlertColor('#F44336'); // Red for error
       setTimeout(() => setAlertMessage(null), 3000);
@@ -34,7 +35,7 @@ export default function SignUpScreen() {
       const response = await fetch('http://10.0.2.2:8081/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ email, displayName, username, password }),
       });
 
       const data = await response.json();
@@ -73,6 +74,13 @@ export default function SignUpScreen() {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        placeholderTextColor="#888"
+        value={displayName}
+        onChangeText={setDisplayName}
       />
       <TextInput
         style={styles.input}
