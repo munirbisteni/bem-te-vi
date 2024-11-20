@@ -28,9 +28,14 @@ public class PostController {
         this.userService = userService;
     }
 
-    @PostMapping("/create")
-    public Post createPost(@RequestBody CreatePostDTO createPostDTO) {
-        return postService.createPost(createPostDTO.userId(), createPostDTO.description(), createPostDTO.image());
+    @PostMapping("/create/{userId}")
+    public Post createPost(@PathVariable String userId, @RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
+        try {
+            byte[] imageBytes = file.getBytes();
+            return postService.createPost(userId, description, imageBytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/{postId}/like/{userId}")
