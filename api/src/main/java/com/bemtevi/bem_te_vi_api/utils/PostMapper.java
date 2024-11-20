@@ -26,6 +26,7 @@ public class PostMapper {
                 post.getImage(),
                 post.getCreatedAt(),
                 post.getAuthor().getId(),
+                post.getAuthor().getUsername(),
                 post.getLikes(),
                 comments,
                 post.getLikeCounter(),
