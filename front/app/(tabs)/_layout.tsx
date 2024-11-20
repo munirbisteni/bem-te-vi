@@ -11,10 +11,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'BemTeVi',
+          title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'home-sharp' : 'home-outline'}
+              color={color}
+              size={24} />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="post"
+        options={{
+          title: 'Post',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'add-circle-sharp' : 'add-circle-outline'}
               color={color}
               size={24} />
           )
