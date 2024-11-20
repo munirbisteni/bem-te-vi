@@ -58,7 +58,7 @@ export default function HomeScreen() {
           return {
             profileImage: profileImage || null,
             id: item.id,
-            author: item.author,
+            authorName: item.authorName,
             image: postImage || null,
             description: item.description,
             likesCount: item.likeCount,
