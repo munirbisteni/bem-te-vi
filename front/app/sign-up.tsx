@@ -35,12 +35,20 @@ export default function SignUpScreen() {
       const response = await fetch('http://10.0.2.2:8081/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, displayName, username, password }),
+        body: JSON.stringify({
+          email,
+          displayName,
+          username,
+          password,
+          about: null,
+          profileImage: null,
+          following: null,
+          followers: null }),
       });
 
       const data = await response.json();
       setLoading(false);
-
+      console.log(response);
       if (response.ok) {
         // Show success alert
         setAlertMessage('Sign-up successful!');

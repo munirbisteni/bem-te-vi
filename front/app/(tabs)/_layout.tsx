@@ -21,6 +21,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'compass-sharp' : 'compass-outline'}
+              color={color}
+              size={24} />
+          )
+        }}
+      />
+      <Tabs.Screen
         name="post"
         options={{
           title: 'Post',
