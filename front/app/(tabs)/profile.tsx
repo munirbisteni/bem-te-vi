@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
+import PostListUserView from '@/components/PostListUserView';
+import Post from '@/interfaces/Post';
 
 export default function ProfileScreen() {
   const [username, setUsername] = useState("");
@@ -11,8 +13,13 @@ export default function ProfileScreen() {
   const [about, setAbout] = useState("");
   const [originalAbout, setOriginalAbout] = useState("");
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<"success" | "error" | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -32,6 +39,8 @@ export default function ProfileScreen() {
           setDisplayName(data.displayName);
           setAbout(data.about || "");
           setOriginalAbout(data.about || "");
+          setFollowers(data.followers); // Assuming `followers` is in the response
+          setFollowing(data.following); // Assuming `following` is in the response
         } else {
           showAlert("Failed to load profile information.", "error");
         }
@@ -140,6 +149,134 @@ export default function ProfileScreen() {
 
   const isUpdateButtonDisabled = about === originalAbout;
 
+  const fetchPosts = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
+
+      if (!accessToken || !userId) {
+        throw new Error("Authorization token or user ID is missing.");
+      }
+
+      const response = await fetch(`http://10.0.2.2:8081/api/posts/user/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts.");
+      }
+
+      const data = await response.json();
+      const mappedPosts: Post[] = await Promise.all(
+        data.map(async (item: any) => {
+          const profileImageResponse = await fetch(`http://10.0.2.2:8081/api/users/${item.author}/profile-image`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const imageData = await profileImageResponse.json();
+          const profileImage = `data:image/jpeg;base64,${imageData.profileImage}`;
+
+          const postImageResponse = await fetch(`http://10.0.2.2:8081/api/posts/${item.id}/image`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const postImageData = await postImageResponse.json();
+          const postImage = `data:image/jpeg;base64,${postImageData.image}`;
+
+          return {
+            profileImage: profileImage || null,
+            id: item.id,
+            authorName: item.authorName,
+            image: postImage || null,
+            description: item.description,
+            likesCount: item.likeCount,
+            commentsCount: item.commentsCount,
+          };
+        })
+      );
+
+      setPosts(mappedPosts);
+    } catch (error) {
+      console.error(error);
+      setAlertMessage('Error fetching posts. Please try again.');
+      setTimeout(() => setAlertMessage(null), 3000);
+    } finally { }
+  };
+
+  // Corrected modal opening and comment handling
+  const handleCommentClick = async (postId: string) => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error("Authorization token is missing.");
+      }
+
+      const response = await fetch(`http://10.0.2.2:8081/api/posts/${postId}/comments`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments.");
+      }
+
+      const data = await response.json();
+      const commentsWithDetails = await Promise.all(data.map(async (comment: any) => {
+        // Fetch profile image
+        const profileImageResponse = await fetch(`http://10.0.2.2:8081/api/users/${comment.userId}/profile-image`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        const imageData = await profileImageResponse.json();
+        const profileImage = `data:image/jpeg;base64,${imageData.profileImage}`;
+
+        // Fetch username
+        const usernameResponse = await fetch(`http://10.0.2.2:8081/api/users/${comment.userId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        const usernameData = await usernameResponse.json();
+        const username = usernameData.username;
+
+        return {
+          ...comment,
+          profileImage,
+          username,
+        };
+      }));
+
+      setComments(commentsWithDetails);
+      setIsModalVisible(true);  // Open modal after loading comments
+    } catch (error) {
+      console.error(error);
+      setAlertMessage('Error fetching comments. Please try again.');
+      setTimeout(() => setAlertMessage(null), 3000);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setComments([]);
+  };
+
+  // Fetch posts when the component mounts
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -151,7 +288,15 @@ export default function ProfileScreen() {
           )}
         </TouchableOpacity>
         <Text style={styles.username}>{username}</Text>
+
         <Text style={styles.displayName}>{displayName}</Text>
+      </View>
+
+      {/* Add the following and followers count */}
+      <View style={styles.followerSection}>
+        <Text style={styles.followerText}>{followers} Followers</Text>
+        <Text>•</Text>
+        <Text style={styles.followerText}>{following} Following</Text>
       </View>
 
       <View style={styles.aboutSection}>
@@ -168,6 +313,38 @@ export default function ProfileScreen() {
           <Text style={styles.updateButtonText}>Update</Text>
         </TouchableOpacity>
       </View>
+
+      <PostListUserView posts={posts} onComment={handleCommentClick}></PostListUserView>
+
+      {/* Modal for comments */}
+      <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Comments</Text>
+            <ScrollView style={{ maxHeight: '60%' }}>
+              {comments.map((comment: any) => (
+                <View key={comment.id} style={styles.comment}>
+                  <View style={styles.commentHeader}>
+                    <Image
+                      source={{ uri: comment.profileImage }}
+                      style={styles.commentProfileImage}
+                    />
+                    <View>
+                      <Text style={styles.username}>{comment.username}</Text>
+                      <Text style={styles.commentText}>{comment.content}</Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+
+            {/* Close button */}
+            <TouchableOpacity onPress={closeModal} style={[styles.closeButton, { backgroundColor: 'red' }]}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {alertMessage && (
         <View style={[
@@ -202,6 +379,16 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  followerSection: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 5,
+  },
+  followerText: {
+    fontSize: 14,
+    color: "#666",
+    marginHorizontal: 5,
   },
   displayName: {
     fontSize: 16,
@@ -245,5 +432,59 @@ const styles = StyleSheet.create({
   alertText: {
     color: "#fff",
     textAlign: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '80%',
+    padding: 20,
+    borderRadius: 10,
+    maxHeight: '80%',  // Ensure modal doesn't take full screen
+    justifyContent: 'flex-start', // Keep content aligned at the top
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  comment: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  commentText: {
+    fontSize: 16,
+    color: '#333',
+    flex: 1,            // Allow comment text to take up remaining space
+    flexWrap: 'wrap',   // Ensure text wraps
+    overflow: 'hidden', // Prevent overflow
+    textAlign: 'left',  // Align text to the left
+    paddingRight: 5,    // Optional: gives a little space at the right side
+  },
+  closeButton: {
+    marginTop: 15,
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  commentProfileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
   },
 });
