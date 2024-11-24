@@ -32,15 +32,14 @@ export default function ProfileScreen() {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (response.ok) {
           const data = await response.json();
           setUsername(data.username);
           setDisplayName(data.displayName);
           setAbout(data.about || "");
           setOriginalAbout(data.about || "");
-          setFollowers(data.followers); // Assuming `followers` is in the response
-          setFollowing(data.following); // Assuming `following` is in the response
+          setFollowers(data.followers || 0); // Assuming `followers` is in the response
+          setFollowing(data.following || 0); // Assuming `following` is in the response
         } else {
           showAlert("Failed to load profile information.", "error");
         }

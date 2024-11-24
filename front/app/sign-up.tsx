@@ -39,11 +39,7 @@ export default function SignUpScreen() {
           email,
           displayName,
           username,
-          password,
-          about: null,
-          profileImage: null,
-          following: null,
-          followers: null }),
+          password}),
       });
 
       const data = await response.json();
