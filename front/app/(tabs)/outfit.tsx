@@ -35,9 +35,14 @@ const RowLayout = () => {
 
   const handleOutfitClick = (id: string) => {
     router.push({
-      pathname: "/[id]", // Matches the dynamic route file
+      pathname: "/outfit-details", // Matches the dynamic route file
       params: { id }, // Provide the `id` parameter
     });
+  };
+
+  const handleAddNew = () => {
+    // Push the CreateOutfit screen onto the stack
+    router.push({ pathname: "/create-outfit" })
   };
 
   if (loading) {
@@ -59,7 +64,9 @@ const RowLayout = () => {
           <Text style={styles.rowText}>{item.name}</Text>
         </TouchableOpacity>
       ))}
-      <TouchableOpacity style={styles.addButton} onPress={() => alert("Create new resource")}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={handleAddNew}>
         <Text style={styles.addButtonText}>+ Add New</Text>
       </TouchableOpacity>
     </ScrollView>
