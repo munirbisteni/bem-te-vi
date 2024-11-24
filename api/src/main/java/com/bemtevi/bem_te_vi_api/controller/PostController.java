@@ -1,16 +1,11 @@
 package com.bemtevi.bem_te_vi_api.controller;
 
-import com.bemtevi.bem_te_vi_api.dto.CreatePostDTO;
 import com.bemtevi.bem_te_vi_api.dto.PostDTO;
 import com.bemtevi.bem_te_vi_api.model.Post;
-import com.bemtevi.bem_te_vi_api.model.User;
-import com.bemtevi.bem_te_vi_api.repository.PostRepository;
 import com.bemtevi.bem_te_vi_api.service.PostService;
 import com.bemtevi.bem_te_vi_api.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
