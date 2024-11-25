@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, ScrollView, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
@@ -22,32 +22,33 @@ export default function ProfileScreen() {
   const { userId } = useLocalSearchParams();
   const [newComment, setNewComment] = useState<string>('');  // New state to hold the comment text
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem("accessToken");
+
+      const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUsername(data.username);
+        setDisplayName(data.displayName);
+        setAbout(data.about || "");
+        setFollowers(data.followers || 0); // Assuming `followers` is in the response
+        setFollowing(data.following || 0); // Assuming `following` is in the response
+      } else {
+        showAlert("Failed to load profile information.", "error");
+      }
+    } catch (error) {
+      showAlert("Error fetching profile data.", "error");
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = await AsyncStorage.getItem("accessToken");
-
-        const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUsername(data.username);
-          setDisplayName(data.displayName);
-          setAbout(data.about || "");
-          setFollowers(data.followers || 0); // Assuming `followers` is in the response
-          setFollowing(data.following || 0); // Assuming `following` is in the response
-        } else {
-          showAlert("Failed to load profile information.", "error");
-        }
-      } catch (error) {
-        showAlert("Error fetching profile data.", "error");
-      }
-    };
-
     const fetchProfileImage = async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
@@ -66,8 +67,19 @@ export default function ProfileScreen() {
       }
     };
 
+    const anotherUserId = userId;
+
+    const fetchFollowingStatus = async () => {
+      const userId = await AsyncStorage.getItem("userId");
+
+      const response = await fetch(`http://10.0.2.2:8081/api/users/${userId}/is-following/${anotherUserId}`);
+      const data = await response.json();
+      setIsFollowing(data);
+    };
+
     fetchUserProfile();
     fetchProfileImage();
+    fetchFollowingStatus();
   }, []);
 
   const showAlert = (message: string, type: "success" | "error") => {
@@ -344,6 +356,22 @@ export default function ProfileScreen() {
     }
   };
 
+  const anotherUserId = userId;
+
+  const handleFollowToggle = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+
+    if (isFollowing) {
+      await fetch(`http://10.0.2.2:8081/api/users/${userId}/unfollow/${anotherUserId}`, {method: 'POST'});
+      setIsFollowing(false);
+    } else {
+      await fetch(`http://10.0.2.2:8081/api/users/${userId}/follow/${anotherUserId}`, {method: 'POST'});
+      setIsFollowing(true);
+    }
+
+    await fetchUserProfile();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -353,7 +381,6 @@ export default function ProfileScreen() {
           <Ionicons name="person-circle" size={80} color="#666" style={styles.icon} />
         )}
         <Text style={styles.username}>{username}</Text>
-
         <Text style={styles.displayName}>{displayName}</Text>
       </View>
 
@@ -363,6 +390,12 @@ export default function ProfileScreen() {
         <Text>•</Text>
         <Text style={styles.followerText}>{following} Following</Text>
       </View>
+
+      <Button
+        title={isFollowing ? 'Unfollow' : 'Follow'}
+        color={isFollowing ? 'red' : 'green'}
+        onPress={handleFollowToggle}
+      />
 
       <View style={styles.aboutSection}>
         <Text style={styles.aboutInput}>{about}</Text>
