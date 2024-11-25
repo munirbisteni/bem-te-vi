@@ -1,8 +1,11 @@
 package com.bemtevi.bem_te_vi_api.controller;
 
+import com.bemtevi.bem_te_vi_api.dto.ClothingRequest;
 import com.bemtevi.bem_te_vi_api.dto.PostDTO;
 import com.bemtevi.bem_te_vi_api.model.Post;
+import com.bemtevi.bem_te_vi_api.repository.ClothingRepository;
 import com.bemtevi.bem_te_vi_api.repository.PostRepository;
+import com.bemtevi.bem_te_vi_api.service.ClothingService;
 import com.bemtevi.bem_te_vi_api.service.PostService;
 import com.bemtevi.bem_te_vi_api.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,16 +21,20 @@ import java.util.*;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
-
-    public PostController(PostService postService, UserService userService) {
+    private final ClothingService clothingService;
+    public PostController(PostService postService, UserService userService, ClothingService clothingService) {
         this.postService = postService;
         this.userService = userService;
+        this.clothingService = clothingService;
     }
 
     @PostMapping("/create/{userId}")
     public Post createPost(@PathVariable String userId, @RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
         try {
             byte[] imageBytes = file.getBytes();
+            String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+
+            clothingService.createClothesByImage(userId, imageBase64);
             return postService.createPost(userId, description, imageBytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
