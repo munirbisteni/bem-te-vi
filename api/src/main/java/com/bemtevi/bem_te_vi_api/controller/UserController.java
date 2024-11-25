@@ -21,6 +21,16 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/{userId}/follow/{otherUserId}")
+    public void follow(@PathVariable String userId, @PathVariable String otherUserId) {
+        userService.follow(userId, otherUserId);
+    }
+
+    @GetMapping("/{userId}/is-following/{otherUserId}")
+    public ResponseEntity<Boolean> isFollowing(@PathVariable String userId, @PathVariable String otherUserId) {
+        return ResponseEntity.ok(userService.isFollowing(userId, otherUserId));
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
         User user = userService.findById(userId);
