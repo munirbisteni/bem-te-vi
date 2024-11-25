@@ -13,10 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/clothing")
+@RequestMapping("/api/clothing")
 @RequiredArgsConstructor
 public class ClothingController {
-
         private final ClothingService clothingService;
 
         @GetMapping

@@ -29,40 +29,24 @@ public class CommentService {
     }
 
     public List<Comment> getCommentsByPostId(String postId) {
-        return commentRepository.findAllByPost(postId);
+        return commentRepository.findAllByPostId(postId);
     }
 
     public void addCommentToPost(String postId, String userId, String content) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Comment comment = new Comment();
-        comment.setId(randomUUID().toString());
-        comment.setAuthor(user);
+        comment.setUserId(userId);
         comment.setContent(content);
         comment.setCreatedAt(LocalDateTime.now());
+        comment.setPostId(postId);
         post.getComments().add(comment);
 
+        commentRepository.save(comment);
         postRepository.save(post);
     }
-
-    public void addReplyToComment(String commentId, String userId, String content) {
-
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Comment reply = new Comment();
-        reply.setContent(content);
-        reply.setAuthor(user);
-        reply.setCreatedAt(LocalDateTime.now());
-        comment.getComments().add(reply);
-
-        commentRepository.save(comment);
-    }
-
 }

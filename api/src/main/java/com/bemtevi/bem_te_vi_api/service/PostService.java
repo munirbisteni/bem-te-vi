@@ -63,6 +63,13 @@ public class PostService{
         postRepository.save(post);
     }
 
+    public List<PostDTO> getPosts() {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream()
+                .map(PostMapper::toPostDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<PostDTO> getPostsByUser(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

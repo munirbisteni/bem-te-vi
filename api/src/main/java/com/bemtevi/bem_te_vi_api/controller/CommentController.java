@@ -23,26 +23,8 @@ public class CommentController {
         return commentService.getCommentsByPostId(postId);
     }
 
-    @PostMapping("/")
-    public void addComment(@RequestBody CreateCommentDTO dto) {
-        commentService.addCommentToPost(dto.postId(), dto.userId(), dto.content());
+    @PostMapping("/{postId}/comments")
+    public void addComment(@PathVariable String postId, @RequestBody CreateCommentDTO dto) {
+        commentService.addCommentToPost(postId, dto.userId(), dto.content());
     }
-
-
-    // TODO: Create reply
-
-    @PostMapping("/{commentId}")
-    public void addReply(@PathVariable String commentId,
-                         @RequestParam String userId,
-                         @RequestParam String content) {
-        commentService.addReplyToComment(commentId, userId, content);
-    }
-
-    // TODO: Delete reply
-
-    // TODO: Delete comment
-
-    // TODO: Update comment
-
-    //TODO: Update reply
 }

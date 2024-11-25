@@ -4,12 +4,8 @@ import com.bemtevi.bem_te_vi_api.dto.UserDTO;
 import com.bemtevi.bem_te_vi_api.model.User;
 import com.bemtevi.bem_te_vi_api.service.UserService;
 import com.bemtevi.bem_te_vi_api.utils.UserMapper;
-import jakarta.websocket.server.PathParam;
-import org.apache.coyote.Response;
-import org.apache.logging.log4j.util.Base64Util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

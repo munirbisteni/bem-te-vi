@@ -16,12 +16,7 @@ public class Comment {
     private String content;
     private LocalDateTime createdAt;
 
-    @DBRef
-    private Post post;
+    private String postId;
 
-    @DBRef
-    private User author;
-
-    @DBRef
-    private List<Comment> comments;
+    private String userId;
 }

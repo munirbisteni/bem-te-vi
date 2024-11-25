@@ -1,9 +1,7 @@
 package com.bemtevi.bem_te_vi_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,9 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Data
 @RequiredArgsConstructor
@@ -43,7 +39,11 @@ public class User implements UserDetails {
     @NonNull
     private String password;
 
-    private List<String> following;
+    @Getter
+    private List<String> following = new ArrayList<>();
+
+    @Getter
+    private List<String> followers = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,8 +59,6 @@ public class User implements UserDetails {
     public @NonNull String getUsername() {
         return username;
     }
-
-    public List<String> getFollowing() { return following; }
 
     @Override
     public boolean isAccountNonExpired() {

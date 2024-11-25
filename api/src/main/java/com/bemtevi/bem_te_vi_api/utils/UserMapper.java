@@ -9,7 +9,9 @@ public class UserMapper {
                 user.getId(),
                 user.getUsername(),
                 user.getDisplayName(),
-                user.getAbout()
+                user.getAbout(),
+                user.getFollowing().size(),
+                user.getFollowers().size()
         );
     }
 }

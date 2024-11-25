@@ -2,6 +2,7 @@ package com.bemtevi.bem_te_vi_api.controller;
 
 import com.bemtevi.bem_te_vi_api.dto.PostDTO;
 import com.bemtevi.bem_te_vi_api.model.Post;
+import com.bemtevi.bem_te_vi_api.repository.PostRepository;
 import com.bemtevi.bem_te_vi_api.service.PostService;
 import com.bemtevi.bem_te_vi_api.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,9 @@ public class PostController {
     public List<PostDTO> getPostsByUser(@PathVariable String userId) {
         return postService.getPostsByUser(userId);
     }
+
+    @GetMapping
+    public List<PostDTO> getPosts() { return postService.getPosts(); }
 
     @GetMapping("/user/{userId}/following")
     public ResponseEntity<List<PostDTO>> getPostsByFollowing(@PathVariable String userId) {

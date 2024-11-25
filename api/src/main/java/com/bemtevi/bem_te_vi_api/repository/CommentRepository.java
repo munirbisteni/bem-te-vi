@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends MongoRepository<Comment, String> {
-    List<Comment> findAllByPost(String post);
+    List<Comment> findAllByPostId(String postId);
 }
 

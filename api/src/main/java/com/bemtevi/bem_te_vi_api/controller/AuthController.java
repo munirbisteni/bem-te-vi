@@ -52,7 +52,11 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO dto) {
-        User user = new User(dto.username(), dto.displayName(), dto.email(), passwordEncoder.encode(dto.password()));
+        User user = new User(
+                dto.username(),
+                dto.displayName(),
+                dto.email(),
+                passwordEncoder.encode(dto.password()));
         userRepository.save(user);
 
         return ResponseEntity.ok(generateTokenDTO(user));

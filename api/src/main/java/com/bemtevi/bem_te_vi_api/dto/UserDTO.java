@@ -5,5 +5,7 @@ public record UserDTO(
         String id,
         String username,
         String displayName,
-        String about
+        String about,
+        Integer following,
+        Integer followers
 ) {}

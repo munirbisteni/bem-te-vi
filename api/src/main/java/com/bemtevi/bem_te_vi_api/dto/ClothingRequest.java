@@ -14,4 +14,3 @@ public class ClothingRequest {
     private String userId;
     private String imageBase64; // Image in Base64
 }
-
