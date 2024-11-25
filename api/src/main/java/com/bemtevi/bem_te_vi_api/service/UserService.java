@@ -30,11 +30,6 @@ public class UserService implements UserDetailsService {
         User anotherUser = userRepository.findById(anotherUserId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (anotherUser.getFollowers().contains(userId)) {
-            unfollow(userId, anotherUserId);
-            return;
-        }
-
         user.getFollowing().add(anotherUserId);
         anotherUser.getFollowers().add(userId);
         userRepository.save(user);

@@ -26,6 +26,11 @@ public class UserController {
         userService.follow(userId, otherUserId);
     }
 
+    @PostMapping("/{userId}/unfollow/{otherUserId}")
+    public void unfollow(@PathVariable String userId, @PathVariable String otherUserId) {
+        userService.unfollow(userId, otherUserId);
+    }
+
     @GetMapping("/{userId}/is-following/{otherUserId}")
     public ResponseEntity<Boolean> isFollowing(@PathVariable String userId, @PathVariable String otherUserId) {
         return ResponseEntity.ok(userService.isFollowing(userId, otherUserId));
