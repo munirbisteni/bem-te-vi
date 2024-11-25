@@ -13,6 +13,7 @@ export default function PostListView({ posts, onLike, onComment }: PostListViewP
   const renderItem = ({ item }: { item: Post }) => (
     <PostCardView
       profileImage={item.profileImage}
+      author={item.author}
       authorName={item.authorName}
       image={item.image}
       description={item.description}

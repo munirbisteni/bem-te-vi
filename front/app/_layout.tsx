@@ -13,6 +13,7 @@ export default function RootLayout() {
       <Stack.Screen name="sign-up" options={{ title: 'Sign-up' }} />
       <Stack.Screen name="outfit-details" options={{ title: 'Outfit details' }} />
       <Stack.Screen name="create-outfit" options={{ title: 'Add new outfit' }} />
+      <Stack.Screen name="another-profile" options={{ title: 'Profile' }} />
     </Stack>
   );
 }

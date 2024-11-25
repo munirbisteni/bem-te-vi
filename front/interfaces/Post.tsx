@@ -3,6 +3,7 @@ import { ImageSource } from "expo-image";
 export default interface Post {
   id: string;
   profileImage: ImageSource | null;
+  author: string;
   authorName: string;
   image: ImageSource | null;
   description: string;
