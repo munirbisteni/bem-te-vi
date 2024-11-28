@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Image, type ImageSource } from 'expo-image';
+import { router } from 'expo-router';
 
 interface PostCardViewProps {
   profileImage: ImageSource | null; // URL or local path to the user's profile image
+  author: string;
   authorName: string;
   image: ImageSource | null; // URL or local path to the post image
   description: string;
@@ -15,13 +17,22 @@ interface PostCardViewProps {
 }
 
 export default function PostCardView(props: PostCardViewProps) {
+  const handleProfileClick = async (userId: string) => {
+    router.push(`/another-profile?userId=${userId}`);
+  }
+
   return (
     <View style={styles.card}>
       {/* User Profile Section */}
-      <View style={styles.userInfo}>
-        <Image source={props.profileImage} style={styles.profileImage} />
-        <Text style={styles.author}>{props.authorName}</Text>
-      </View>
+      <TouchableOpacity
+        key={props.author}
+        onPress={() => handleProfileClick(props.author)}
+      >
+        <View style={styles.userInfo}>
+          <Image source={props.profileImage} style={styles.profileImage} />
+          <Text style={styles.author}>{props.authorName}</Text>
+        </View>
+      </TouchableOpacity>
 
       {/* Post Image Section */}
       <Image source={props.image} style={styles.imageUrl} />

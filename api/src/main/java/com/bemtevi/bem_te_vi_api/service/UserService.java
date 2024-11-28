@@ -1,5 +1,6 @@
 package com.bemtevi.bem_te_vi_api.service;
 
+import com.bemtevi.bem_te_vi_api.model.Post;
 import com.bemtevi.bem_te_vi_api.model.User;
 import com.bemtevi.bem_te_vi_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,38 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
+    public boolean isFollowing(String userId, String anotherUserId) {
+        User user = userRepository.findById(anotherUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return user.getFollowers().contains(userId);
+    }
+
+    public void follow(String userId, String anotherUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User anotherUser = userRepository.findById(anotherUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.getFollowing().add(anotherUserId);
+        anotherUser.getFollowers().add(userId);
+        userRepository.save(user);
+        userRepository.save(anotherUser);
+    }
+
+    public void unfollow(String userId, String anotherUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User anotherUser = userRepository.findById(anotherUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.getFollowing().remove(anotherUserId);
+        anotherUser.getFollowers().remove(userId);
+
+        userRepository.save(user);
+        userRepository.save(anotherUser);
+    }
 
     public void updateUserAbout(String userId, String about) {
         User user = userRepository.findById(userId)
