@@ -86,6 +86,7 @@ def segment_and_crop(image_uploaded, output_dir="output_segments"):
         base64_image = image_to_base64(cropped_image)
         if label in ("Upper-clothes", "Pants"):
             segments_base64[label] = base64_image
+            
     print("Recortes concluídos!")
     return json.dumps(segments_base64, ensure_ascii=False)
 
