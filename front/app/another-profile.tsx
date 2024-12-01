@@ -267,7 +267,11 @@ export default function ProfileScreen() {
   }, []);
 
   const handleSingleCommentClick = async (userId: string) => {
-    router.push(`/another-profile?userId=${userId}`);
+    const currentUserId = await AsyncStorage.getItem("userId")
+    currentUserId == userId
+      ? router.push('/profile')
+      : router.push(`/another-profile?userId=${userId}`);
+    closeModal()
   }
 
   const handleSubmitComment = async () => {
