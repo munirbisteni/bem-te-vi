@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
@@ -64,29 +64,31 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={pickImage}>
-          {postImage ? (
-            <Image source={{ uri: postImage }} style={styles.profileImage} />
-          ) : (
-            <Ionicons name="image" size={200} color="#666" style={styles.icon} />
-          )}
-        </TouchableOpacity>
-      </View>
+      <ScrollView>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={pickImage}>
+            {postImage ? (
+              <Image source={{ uri: postImage }} style={styles.profileImage} />
+            ) : (
+              <Ionicons name="image" size={200} color="#666" style={styles.icon} />
+            )}
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.postSection}>
-        <TextInput
-          style={styles.postInput}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Write something to share"
-          multiline />
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={handlePostCreation}>
-          <Text style={styles.updateButtonText}>Post</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.postSection}>
+          <TextInput
+            style={styles.postInput}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Write something to share"
+            multiline />
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={handlePostCreation}>
+            <Text style={styles.updateButtonText}>Post</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
 
       {alertMessage && (
         <View style={[
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     width: 300,
-    height: 300,
+    height: 600,
     borderRadius: 5,
   },
   postSection: {
