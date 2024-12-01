@@ -285,7 +285,10 @@ export default function HomeScreen() {
   };
 
   const handleSingleCommentClick = async (userId: string) => {
-    router.push(`/another-profile?userId=${userId}`);
+    const currentUserId = await AsyncStorage.getItem("userId")
+    currentUserId == userId
+      ? router.push('/profile')
+      : router.push(`/another-profile?userId=${userId}`);
   }
 
   return (

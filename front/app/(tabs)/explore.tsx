@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ActivityIndicator, Modal, TouchableOpacity, Scr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PostListView from '@/components/PostListView';
 import Post from '@/interfaces/Post';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -59,6 +60,7 @@ export default function HomeScreen() {
           return {
             profileImage: profileImage || null,
             id: item.id,
+            author: item.author,
             authorName: item.authorName,
             image: postImage || null,
             description: item.description,
@@ -281,6 +283,13 @@ export default function HomeScreen() {
     fetchPosts();
   };
 
+  const handleSingleCommentClick = async (userId: string) => {
+    const currentUserId = await AsyncStorage.getItem("userId")
+    currentUserId == userId
+      ? router.push('/profile')
+      : router.push(`/another-profile?userId=${userId}`);
+  }
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -301,6 +310,10 @@ export default function HomeScreen() {
             <Text style={styles.modalTitle}>Comments</Text>
             <ScrollView style={{ maxHeight: '60%' }}>
               {comments.map((comment: any) => (
+              <TouchableOpacity
+                key={comment.id}
+                onPress={() => handleSingleCommentClick(comment.userId)}
+              >
                 <View key={comment.id} style={styles.comment}>
                   <View style={styles.commentHeader}>
                     <Image
@@ -313,6 +326,7 @@ export default function HomeScreen() {
                     </View>
                   </View>
                 </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
 
