@@ -1,6 +1,3 @@
-/api/.idea
-/ia/ia-env
-
 # dependencies
 node_modules/
 
@@ -40,3 +37,7 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
+
+/api/.idea
+/ia/ia-env
+/api/target
