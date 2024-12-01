@@ -289,6 +289,7 @@ export default function HomeScreen() {
     currentUserId == userId
       ? router.push('/profile')
       : router.push(`/another-profile?userId=${userId}`);
+    closeModal();
   }
 
   return (
