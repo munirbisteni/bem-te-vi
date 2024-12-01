@@ -4,8 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
-import PostListUserView from '@/components/PostListUserView';
+import PostListView from '@/components/PostListView';
 import Post from '@/interfaces/Post';
+import { router } from "expo-router";
 
 export default function ProfileScreen() {
   const [username, setUsername] = useState("");
@@ -20,6 +21,7 @@ export default function ProfileScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [comments, setComments] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -268,8 +270,17 @@ export default function ProfileScreen() {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    setSelectedPostId(null);
     setComments([]);
   };
+
+  const handleSingleCommentClick = async (userId: string) => {
+    const currentUserId = await AsyncStorage.getItem("userId")
+    currentUserId == userId
+      ? router.push('/profile')
+      : router.push(`/another-profile?userId=${userId}`);
+    closeModal();
+  }
 
   // Fetch posts when the component mounts
   useEffect(() => {
@@ -313,7 +324,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <PostListUserView posts={posts} onComment={handleCommentClick}></PostListUserView>
+      <PostListView posts={posts} onLike={() => {}} onComment={handleCommentClick}></PostListView>
 
       {/* Modal for comments */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
@@ -322,18 +333,23 @@ export default function ProfileScreen() {
             <Text style={styles.modalTitle}>Comments</Text>
             <ScrollView style={{ maxHeight: '60%' }}>
               {comments.map((comment: any) => (
-                <View key={comment.id} style={styles.comment}>
-                  <View style={styles.commentHeader}>
-                    <Image
-                      source={{ uri: comment.profileImage }}
-                      style={styles.commentProfileImage}
-                    />
-                    <View>
-                      <Text style={styles.username}>{comment.username}</Text>
-                      <Text style={styles.commentText}>{comment.content}</Text>
+                <TouchableOpacity
+                  key={comment.id}
+                  onPress={() => handleSingleCommentClick(comment.userId)}
+                >
+                  <View style={styles.comment}>
+                    <View style={styles.commentHeader}>
+                      <Image
+                        source={{ uri: comment.profileImage }}
+                        style={styles.commentProfileImage}
+                      />
+                      <View>
+                        <Text style={styles.username}>{comment.username}</Text>
+                        <Text style={styles.commentText}>{comment.content}</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
 
