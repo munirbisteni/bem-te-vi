@@ -56,8 +56,10 @@ public class PostController {
         return postService.getPostsByUser(userId);
     }
 
-    @GetMapping
-    public List<PostDTO> getPosts() { return postService.getPosts(); }
+    @GetMapping("/{userId}")
+    public List<PostDTO> getPosts(@PathVariable String userId) {
+        return postService.getPosts(userId);
+    }
 
     @GetMapping("/user/{userId}/following")
     public ResponseEntity<List<PostDTO>> getPostsByFollowing(@PathVariable String userId) {

@@ -63,8 +63,12 @@ public class PostService{
         postRepository.save(post);
     }
 
-    public List<PostDTO> getPosts() {
-        List<Post> posts = postRepository.findAll();
+    public List<PostDTO> getPosts(String userId) {
+        List<Post> posts = postRepository.findAll()
+                .stream()
+                .filter(post -> !post.getAuthor().getId().equals(userId))
+                .toList();
+
         return posts.stream()
                 .map(PostMapper::toPostDTO)
                 .collect(Collectors.toList());
