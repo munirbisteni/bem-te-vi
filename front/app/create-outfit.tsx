@@ -57,12 +57,11 @@ const CreateOutfit = () => {
         body: JSON.stringify({
           name: outfitName,
           topId: selectedTop.id,
-          bottomid: selectedBottom.id,
+          bottomId: selectedBottom.id,
           userId,
         }),
       });
 
-      const result = await response.json();
       if (response.ok) {
         // Navigate to the outfits screen or another appropriate screen
         router.push({ pathname: '/(tabs)/outfit' });
@@ -158,7 +157,6 @@ const CreateOutfit = () => {
                 source={{ uri: `data:image/jpeg;base64,${item.imageBase64}` }}
                 style={styles.image}
               />
-              <Text>{item.name}</Text>
             </TouchableOpacity>
           ))}
       </ScrollView>
@@ -185,7 +183,6 @@ const CreateOutfit = () => {
                 source={{ uri: `data:image/jpeg;base64,${item.imageBase64}` }}
                 style={styles.image}
               />
-              <Text>{item.name}</Text>
             </TouchableOpacity>
           ))}
       </ScrollView>
